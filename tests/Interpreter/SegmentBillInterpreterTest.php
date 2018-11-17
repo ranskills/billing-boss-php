@@ -22,7 +22,6 @@ class SegmentBillInterpreterTest extends TestCase
 
     public function testShouldPassWithValidBillingStructure()
     {
-        // $context = new BillContext(0, '1, 1 - 100');
         $context = new BillContext(0, '1, 1 - 100 | 5, 101 - *');
         $this->assertTrue($this->interpreter->isValid($context));
 
