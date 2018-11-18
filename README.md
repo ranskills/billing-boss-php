@@ -1,6 +1,7 @@
 # Billing Boss 
 
 [![Build Status](https://travis-ci.org/ranskills/billing-boss-php.svg?branch=master)](https://travis-ci.org/ranskills/billing-boss-php)
+[![codecov](https://codecov.io/gh/ranskills/billing-boss-php/branch/master/graph/badge.svg)](https://codecov.io/gh/ranskills/billing-boss-php)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Billing Boss** is a library that implements billing using a domain-specific language (DSL) to express a billing structure to be applied.
