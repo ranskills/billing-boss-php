@@ -1,21 +1,30 @@
 {
     "name": "ranskills/billing-boss",
     "description": "A library that implements billing using a domain-specific language (DSL) to express a billing structure to be applied",
-    "keywords": ["billing", "discount"],
+    "keywords": ["billing", "bill", "discount"],
+    "homepage": "https://github.com/ranskills/billing-boss-php",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Ransford Okpoti",
-            "email": "ranskills@yahoo.co.uk"
+            "email": "ranskills@yahoo.co.uk",
+            "homepage": "https://ranskills.wordpress.com",
+            "role": "developer"
         }
     ],
     "scripts": {
         "test": "phpunit --whitelist src/ --coverage-clover=coverage.xml --testdox tests/",
+        "test-dev": "phpunit --whitelist src/ --coverage-html tests/_reports/coverage --testdox tests/",
         "phpcs": "phpcs --report=summary src/"
     },
     "require": {
         "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4",
+        "behat/behat": "^3.5",
+        "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
         "psr-4": {
@@ -26,10 +35,5 @@
         "psr-4": {
             "BillingBoss\\Tests\\": "tests/"
         }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.4",
-        "behat/behat": "^3.5",
-        "squizlabs/php_codesniffer": "*"
     }
 }
