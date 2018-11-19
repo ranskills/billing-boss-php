@@ -21,7 +21,9 @@ final class FlatRateBillInterpreter extends AbstractBillInterpreter
 
     public function interpret(BillContext $context): float
     {
-        if (!$this->isValid($context)) return 0;
+        if (!$this->isValid($context)) {
+            return 0;
+        }
 
         return $this->matches[0];
     }

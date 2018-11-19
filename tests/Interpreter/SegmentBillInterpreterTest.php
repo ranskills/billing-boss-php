@@ -25,11 +25,14 @@ class SegmentBillInterpreterTest extends TestCase
         $context = new BillContext(0, '1, 1 - 100 | 5, 101 - *');
         $this->assertTrue($this->interpreter->isValid($context));
 
-        // todo consider handling this 1, 1 - 100 | 5, 101 - 1000| 5, 101 - 1000
-        $context = new BillContext(0, '1, 1    -   100 | 5, 101    -   1000| 6, 80     - *');
+        $context->setStructure('1%, 1    -   100 | 5%, 101    -   1000 | 10%, 1001    -  *');
         $this->assertTrue($this->interpreter->isValid($context));
+        $this->assertEquals(.5, $this->interpreter->interpret($context->setAmount(50)));
+        $this->assertEquals(25, $this->interpreter->interpret($context->setAmount(500)));
+        $this->assertEquals(200, $this->interpreter->interpret($context->setAmount(2000)));
 
-        // $this->assertTrue($this->interpreter->isValid($context->setStructure('1%, 50    > 5%, 250> 10%, *    ')));
+        $context->setStructure('1, 1    -   100 | 5%, 101    -   1000 | 10%, 1001    -  *');
+        $this->assertEquals(1, $this->interpreter->interpret($context->setAmount(50)));
 
     }
 

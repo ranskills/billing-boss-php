@@ -4,7 +4,7 @@ namespace BillingBoss;
 
 /**
  * Class BillContext
- * 
+ *
  * @category BillingBoss
  * @package  BillingBoss
  * @author   Ransford Okpoti <ranskills@yahoo.co.uk>
@@ -18,7 +18,7 @@ final class BillContext
 
     /**
      * Constructor A
-     * 
+     *
      * @param float  $amount    The amount to be billed
      * @param string $structure The billing structure to be applied on $amount
      */
@@ -30,7 +30,7 @@ final class BillContext
 
     /**
      * Returns the amount
-     * 
+     *
      * @return float
      */
     public function getAmount(): float
@@ -40,9 +40,9 @@ final class BillContext
 
     /**
      * Sets the amount and returns this instance
-     * 
+     *
      * @param float $amount The amount to be billed
-     * 
+     *
      * @return BillContext
      */
     public function setAmount(float $amount)
@@ -53,7 +53,7 @@ final class BillContext
 
     /**
      * Returns the structure for this context
-     * 
+     *
      * @return string
      */
     public function getStructure(): string
@@ -63,9 +63,9 @@ final class BillContext
 
     /**
      * Sets the billing structure for the context
-     * 
+     *
      * @param string $structure The billing structure
-     * 
+     *
      * @return BillContext
      */
     public function setStructure(string $structure)

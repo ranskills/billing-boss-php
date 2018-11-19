@@ -2,11 +2,10 @@
 
 namespace BillingBoss;
 
-
 interface BillInterpreter
 {
 
-    function interpret(BillContext $context): float;
+    public function interpret(BillContext $context): float;
 
-    function isValid(BillContext $context): bool;
+    public function isValid(BillContext $context): bool;
 }

@@ -2,7 +2,6 @@
 
 namespace BillingBoss;
 
-
 use BillingBoss\BillContext;
 use BillingBoss\BillInterpreter;
 
@@ -17,9 +16,9 @@ abstract class AbstractBillInterpreter implements BillInterpreter
     }
 
 
-    public abstract function interpret(BillContext $context): float;
+    abstract public function interpret(BillContext $context): float;
 
-    function isValid(BillContext $context): bool
+    public function isValid(BillContext $context): bool
     {
         return preg_match($this->regex, $context->getStructure(), $this->matches);
     }

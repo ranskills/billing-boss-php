@@ -1,7 +1,13 @@
 <?php
-
+/**
+ * Billing Boss
+ *
+ * @link      https://github.com/ranskills/billing-boss-php
+ * @copyright Copyright (c) 2018 Ransford Ako Okpoti
+ * @license   Refer to the LICENSE distributed with this library
+ * @since     1.0
+ */
 namespace BillingBoss\Interpreter;
-
 
 use BillingBoss\Expr;
 use BillingBoss\BillContext;
@@ -9,21 +15,68 @@ use BillingBoss\AbstractBillInterpreter;
 
 final class SegmentBillInterpreter extends AbstractBillInterpreter
 {
-    const EXP_SINGLE_SEGMENT =  Expr::EXP_NUMBER_OR_PERCENT.','. Expr::EXP_SPACES. Expr::EXP_POSITIVE_NUMBER. Expr::EXP_HYPHEN. Expr::EXP_POSITIVE_NUMBER;
+    const EXP_SINGLE_SEGMENT =  Expr::EXP_NUMBER_OR_PERCENT .
+                                ',' .
+                                Expr::EXP_SPACES .
+                                Expr::EXP_POSITIVE_NUMBER .
+                                Expr::EXP_HYPHEN .
+                                Expr::EXP_POSITIVE_NUMBER;
 
     public function __construct()
     {
-        parent::__construct(sprintf('/^%1$s\s*(\|\s*%1$s)*\s*(\|\s*(%2$s),\s*(%3$s)\s*-\s*\*)$/', 
-            self::EXP_SINGLE_SEGMENT, 
-            Expr::EXP_NUMBER, 
+        parent::__construct(sprintf(
+            '/^%1$s\s*(\|\s*%1$s)*\s*(\|\s*(%2$s),\s*(%3$s)\s*-\s*\*)$/',
+            self::EXP_SINGLE_SEGMENT,
+            Expr::EXP_NUMBER_OR_PERCENT,
             Expr::EXP_POSITIVE_NUMBER
         ));
     }
 
     public function interpret(BillContext $context): float
     {
-        if (!$this->isValid($context)) return 0.0;
+        if (!$this->isValid($context)) {
+            return 0.0;
+        }
 
-        return 0.0;
+        $parts = preg_split('/\s*\|\s*/', $context->getStructure());
+
+        foreach ($parts as $part) {
+            $matches = [];
+            $regex = Expr::EXP_NUMBER_OR_PERCENT .
+                    ',' .
+                    Expr::EXP_SPACES .
+                    Expr::EXP_POSITIVE_NUMBER .
+                    Expr::EXP_HYPHEN .
+                    Expr::POSITIVE_NUMBER_OR_ASTERISK;
+
+            \preg_match(sprintf('/^%s$/', $regex), $part, $matches);
+
+            $min = \floatval($matches[3]);
+            $max = $matches[4];
+            $amount = $context->getAmount();
+
+            $bill = 0.0;
+            $compute = false;
+
+            if ($max === '*') {
+                $compute = $min <= $amount;
+            } else {
+                $max = floatval($max);
+                $compute = $min <= $amount && $amount <= $max;
+            }
+
+            if ($compute) {
+                $ctxt = new BillContext($amount, $matches[1]);
+                $percentBillInterpreter = new PercentageBillInterpreter();
+                if ($percentBillInterpreter->isValid($ctxt)) {
+                    $bill = $percentBillInterpreter->interpret($ctxt);
+                } else {
+                    $bill = (new FlatRateBillInterpreter())->interpret($ctxt);
+                }
+                break;
+            }
+        }
+
+        return $bill;
     }
 }

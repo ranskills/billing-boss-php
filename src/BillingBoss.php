@@ -2,7 +2,6 @@
 
 namespace BillingBoss;
 
-
 use BillingBoss\Interpreter\FlatRateBillInterpreter;
 use BillingBoss\Interpreter\PercentageBillInterpreter;
 
@@ -15,7 +14,9 @@ class BillingBoss
 
     public static function getInterpreters()
     {
-        if (self::$interpreters) return self::$interpreters;
+        if (self::$interpreters) {
+            return self::$interpreters;
+        }
 
         self::addInterpreter(new FlatRateBillInterpreter());
         self::addInterpreter(new PercentageBillInterpreter());
@@ -40,7 +41,7 @@ class BillingBoss
     {
         $interpreters = self::getInterpreters();
 
-        foreach($interpreters as $interpreter) {
+        foreach ($interpreters as $interpreter) {
             if ($interpreter->isValid($context)) {
                 return $interpreter->interpret($context);
             }

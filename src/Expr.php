@@ -9,4 +9,5 @@ final class Expr
     const EXP_NUMBER = '(-?\d*\.?\d+)';
     const EXP_NUMBER_OR_PERCENT = '('. self::EXP_NUMBER . '%?)'; //'((-?\d*\.?\d+)%?)';
     const EXP_POSITIVE_NUMBER = '(\d*\.?\d+)';
+    const POSITIVE_NUMBER_OR_ASTERISK = '(\d*\.?\d+|\*)';
 }
