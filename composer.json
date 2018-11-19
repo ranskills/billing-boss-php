@@ -16,7 +16,15 @@
     "scripts": {
         "test": "phpunit --whitelist src/ --coverage-clover=coverage.xml --testdox tests/",
         "test-dev": "phpunit --whitelist src/ --coverage-html tests/_reports/coverage --testdox tests/",
-        "phpcs": "phpcs --standard=PSR2 src/"
+        "phpcs": "phpcs --standard=PSR2 src/",
+        "clean": [
+            "rm -rf tests/_reports",
+            "rm -f coverage.xml"
+        ]
+    },
+    "scripts-descriptions": {
+        "test": "Run all tests!",
+        "clean": "Remove generated files"
     },
     "require": {
         "php": "^7.1"
