@@ -15,20 +15,20 @@ use BillingBoss\AbstractBillInterpreter;
 
 final class SegmentBillInterpreter extends AbstractBillInterpreter
 {
-    const EXP_SINGLE_SEGMENT =  Expr::EXP_NUMBER_OR_PERCENT .
+    const EXP_SINGLE_SEGMENT =  Expr::NUMBER_OR_PERCENT .
                                 ',' .
-                                Expr::EXP_SPACES .
-                                Expr::EXP_POSITIVE_NUMBER .
-                                Expr::EXP_HYPHEN .
-                                Expr::EXP_POSITIVE_NUMBER;
+                                Expr::SPACES .
+                                Expr::POSITIVE_NUMBER .
+                                Expr::HYPHEN .
+                                Expr::POSITIVE_NUMBER;
 
     public function __construct()
     {
         parent::__construct(sprintf(
             '/^%1$s\s*(\|\s*%1$s)*\s*(\|\s*(%2$s),\s*(%3$s)\s*-\s*\*)$/',
             self::EXP_SINGLE_SEGMENT,
-            Expr::EXP_NUMBER_OR_PERCENT,
-            Expr::EXP_POSITIVE_NUMBER
+            Expr::NUMBER_OR_PERCENT,
+            Expr::POSITIVE_NUMBER
         ));
     }
 
@@ -42,11 +42,11 @@ final class SegmentBillInterpreter extends AbstractBillInterpreter
 
         foreach ($parts as $part) {
             $matches = [];
-            $regex = Expr::EXP_NUMBER_OR_PERCENT .
+            $regex = Expr::NUMBER_OR_PERCENT .
                     ',' .
-                    Expr::EXP_SPACES .
-                    Expr::EXP_POSITIVE_NUMBER .
-                    Expr::EXP_HYPHEN .
+                    Expr::SPACES .
+                    Expr::POSITIVE_NUMBER .
+                    Expr::HYPHEN .
                     Expr::POSITIVE_NUMBER_OR_ASTERISK;
 
             \preg_match(sprintf('/^%s$/', $regex), $part, $matches);

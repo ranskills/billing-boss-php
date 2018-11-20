@@ -4,10 +4,10 @@ namespace BillingBoss;
 
 final class Expr
 {
-    const EXP_SPACES = '\s*';
-    const EXP_HYPHEN = self::EXP_SPACES . '-' . self::EXP_SPACES;
-    const EXP_NUMBER = '(-?\d*\.?\d+)';
-    const EXP_NUMBER_OR_PERCENT = '('. self::EXP_NUMBER . '%?)'; //'((-?\d*\.?\d+)%?)';
-    const EXP_POSITIVE_NUMBER = '(\d*\.?\d+)';
+    const SPACES = '\s*';
+    const HYPHEN = self::SPACES . '-' . self::SPACES;
+    const NUMBER = '(-?\d*\.?\d+)';
+    const NUMBER_OR_PERCENT = '('. self::NUMBER . '%?)'; //'((-?\d*\.?\d+)%?)';
+    const POSITIVE_NUMBER = '(\d*\.?\d+)';
     const POSITIVE_NUMBER_OR_ASTERISK = '(\d*\.?\d+|\*)';
 }
