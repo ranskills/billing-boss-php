@@ -38,6 +38,7 @@ final class SegmentBillInterpreter extends AbstractBillInterpreter
             return 0.0;
         }
 
+        $bill = 0.0;
         $parts = preg_split('/\s*\|\s*/', $context->getStructure());
 
         foreach ($parts as $part) {
@@ -54,8 +55,6 @@ final class SegmentBillInterpreter extends AbstractBillInterpreter
             $min = \floatval($matches[3]);
             $max = $matches[4];
             $amount = $context->getAmount();
-
-            $bill = 0.0;
             $compute = false;
 
             if ($max === '*') {

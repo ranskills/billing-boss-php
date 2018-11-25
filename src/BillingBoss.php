@@ -14,7 +14,7 @@ class BillingBoss
 
     public static function getInterpreters()
     {
-        if (self::$interpreters) {
+        if (!empty(self::$interpreters)) {
             return self::$interpreters;
         }
 
