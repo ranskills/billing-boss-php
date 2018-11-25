@@ -55,14 +55,8 @@ final class SegmentBillInterpreter extends AbstractBillInterpreter
             $min = \floatval($matches[3]);
             $max = $matches[4];
             $amount = $context->getAmount();
-            $compute = false;
 
-            if ($max === '*') {
-                $compute = $min <= $amount;
-            } else {
-                $max = floatval($max);
-                $compute = $min <= $amount && $amount <= $max;
-            }
+            $compute = $max === '*' ? $min <= $amount : $min <= $amount && $amount <= floatval($max);
 
             if ($compute) {
                 $ctxt = new BillContext($amount, $matches[1]);
