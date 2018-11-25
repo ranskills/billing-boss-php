@@ -20,6 +20,6 @@ abstract class AbstractBillInterpreter implements BillInterpreter
 
     public function isValid(BillContext $context): bool
     {
-        return preg_match($this->regex, $context->getStructure(), $this->matches);
+        return preg_match($this->regex, $context->getStructure(), $this->matches) === 1;
     }
 }
