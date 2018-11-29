@@ -62,14 +62,11 @@ final class RangeHelper
         return false;
     }
 
-    public static function getRangeLimits($str)
+    private static function getRangeLimits($str)
     {
         $ranges = [];
 
-        $numMatches = preg_match_all(sprintf('/%s/', Expr::RANGE), $str, $matches);
-        if ($numMatches === 0) {
-            return $ranges;
-        }
+        preg_match_all(sprintf('/%s/', Expr::RANGE), $str, $matches);
 
         $lowerLimits = $matches[1];
         $upperLimits = $matches[2];
