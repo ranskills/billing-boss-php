@@ -18,7 +18,8 @@ final class FlatRateBillInterpreter extends AbstractBillInterpreter
     private const EXPRESSION = Expr::POSITIVE_NUMBER .
                                Expr::COMMA .
                                Expr::RANGE;
-
+    private $ranges = [];
+    
     public function __construct()
     {
         parent::__construct(sprintf('/^(%1$s)(%2$s%1$s)*$/', self::EXPRESSION, Expr::PIPE));
@@ -38,8 +39,9 @@ final class FlatRateBillInterpreter extends AbstractBillInterpreter
         $bill = 0.0;
 
         $parts = preg_split(sprintf('/%s/', Expr::PIPE), $context->getStructure());
-        // print_r($parts);
-        for ($i = 0; $i < count($parts); $i++) {
+        $len = $parts === false ? 0 : count($parts);
+
+        for ($i = 0; $i < $len; $i++) {
             $range = $this->ranges[$i];
             $matches = [];
 

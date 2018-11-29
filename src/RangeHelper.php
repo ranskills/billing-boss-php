@@ -19,9 +19,7 @@ final class RangeHelper
 
     public static function validate($str)
     {
-        $ranges = [];
         $matches = [];
-
         $numMatches = preg_match_all(sprintf('/%s/', Expr::RANGE), $str, $matches);
         if ($numMatches === 0) {
             return [self::VALIDATION_NO_RANGE_FOUND, []];
@@ -34,29 +32,38 @@ final class RangeHelper
 
         $lowerLimits = $matches[1];
         $upperLimits = $matches[2];
-        $ranges = [];
-        for ($i = 0; $i < count($lowerLimits); $i++) {
-            if (is_numeric($upperLimits[$i]) && floatval($lowerLimits[$i]) > floatval($upperLimits[$i])) {
-                return [self::VALIDATION_CONFLICT, []];
-            }
-            $ranges[] = [$lowerLimits[$i], $upperLimits[$i]];
+        $numRanges = count($lowerLimits);
+
+        $ranges = self::getRangeLimits($str);
+        if (count($ranges) === 0) {
+            return [self::VALIDATION_CONFLICT, []];
         }
 
-        for ($i = 0; $i < count($ranges); $i++) {
-            for ($j = $i + 1; $j < count($ranges); $j++) {
-                $inRange = self::isInRange($ranges[$i], $ranges[$j][0]) ||
-                self::isInRange($ranges[$i], $ranges[$j][1]) ||
+        if (self::overlapping($ranges)) {
+            return [self::VALIDATION_OVERLAPPING_VALUES, []];
+        }
+        
+        return [self::VALIDATION_OK, $ranges];
+    }
 
-                self::isInRange($ranges[$j], $ranges[$i][0]) ||
-                self::isInRange($ranges[$j], $ranges[$i][1]);
+    private static function overlapping(array $ranges)
+    {
+        $numRanges = count($ranges);
+
+        for ($i = 0; $i < $numRanges; $i++) {
+            for ($j = $i + 1; $j < $numRanges; $j++) {
+                $inRange = self::isInRange($ranges[$i], $ranges[$j][0]) ||
+                            self::isInRange($ranges[$i], $ranges[$j][1]) ||
+                            self::isInRange($ranges[$j], $ranges[$i][0]) ||
+                            self::isInRange($ranges[$j], $ranges[$i][1]);
 
                 if ($inRange) {
-                    return [self::VALIDATION_OVERLAPPING_VALUES, []];
+                    return true;
                 }
             }
         }
 
-        return [self::VALIDATION_OK, $ranges];
+        return false;
     }
 
     public static function getRangeLimits($str)
@@ -70,9 +77,11 @@ final class RangeHelper
 
         $lowerLimits = $matches[1];
         $upperLimits = $matches[2];
-        for ($i = 0; $i < count($lowerLimits); $i++) {
+        $len = count($lowerLimits);
+
+        for ($i = 0; $i < $len; $i++) {
             if (is_numeric($upperLimits[$i]) && floatval($lowerLimits[$i]) > floatval($upperLimits[$i])) {
-                return self::VALIDATION_CONFLICT;
+                return [];
             }
             $ranges[] = [$lowerLimits[$i], $upperLimits[$i]];
         }
