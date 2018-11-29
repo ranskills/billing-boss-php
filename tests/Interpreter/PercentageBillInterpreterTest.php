@@ -22,23 +22,32 @@ class PercentageBillInterpreterTest extends TestCase
 
     public function testshouldPassWithValidBillingStructure()
     {
-        $context = new BillContext(0, '1%');
+        $context = new BillContext(0, '1%, 1 - *');
         $this->assertTrue($this->interpreter->isValid($context));
 
         $bill = $this->interpreter->interpret($context);
         $this->assertEquals(0, $bill);
 
-        $context->setAmount(1000);
-        $bill = $this->interpreter->interpret($context);
-        $this->assertEquals(10, $bill);
+        $bill = $this->interpreter->interpret($context->setAmount(-1));
+        $this->assertEquals(0.0, $bill);
 
-        $context->setAmount(1000)->setStructure('1.5%');
-        $bill = $this->interpreter->interpret($context);
-        $this->assertEquals(15, $bill);
+        $bill = $this->interpreter->interpret($context->setAmount(200));
+        $this->assertEquals(2.0, $bill);
 
-        $context->setAmount(1000)->setStructure('0%');
-        $bill = $this->interpreter->interpret($context);
-        $this->assertEquals(0, $bill);
+
+        $context = new BillContext(0, '1%, 1 - 500 | 3%, 501 - 2000 | 5%, 2001 - *');
+
+        $bill = $this->interpreter->interpret($context->setAmount(500));
+        $this->assertEquals(5.0, $bill);
+
+        $bill = $this->interpreter->interpret($context->setAmount(1000));
+        $this->assertEquals(30.0, $bill);
+
+        $bill = $this->interpreter->interpret($context->setAmount(2001));
+        $this->assertEquals(100.05, $bill);
+
+        $bill = $this->interpreter->interpret($context->setAmount(125000));
+        $this->assertEquals(6250.0, $bill);
     }
 
 

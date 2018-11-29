@@ -22,24 +22,29 @@ class FlatRateBillInterpreterTest extends TestCase
 
     public function testShouldPassWithValidBillingStructure()
     {
-        $context = new BillContext(0, '5');
+        $context = new BillContext(0, '5, 1 - *');
+        $this->assertTrue($this->interpreter->isValid($context));
+        
+        $context = new BillContext(0, '1, 1 - 499     | 10, 500 - *');
         $this->assertTrue($this->interpreter->isValid($context));
 
         $bill = $this->interpreter->interpret($context);
-        $this->assertEquals(5, $bill);
-
-        $context->setAmount(1000);
-        $bill = $this->interpreter->interpret($context);
-        $this->assertEquals(5, $bill);
-
-        $context->setAmount(1000)->setStructure('10');
-        $bill = $this->interpreter->interpret($context);
-        $this->assertEquals(10, $bill);
-
-        $context->setAmount(1000)->setStructure('0');
-        $bill = $this->interpreter->interpret($context);
         $this->assertEquals(0, $bill);
 
+        $bill = $this->interpreter->interpret($context->setAmount(100));
+        $this->assertEquals(1.0, $bill);
+
+        $bill = $this->interpreter->interpret($context->setAmount(499));
+        $this->assertEquals(1.0, $bill);
+
+        $bill = $this->interpreter->interpret($context->setAmount(500));
+        $this->assertEquals(10.0, $bill);
+
+        $bill = $this->interpreter->interpret($context->setAmount(-100));
+        $this->assertEquals(0, $bill);
+
+        $bill = $this->interpreter->interpret($context->setStructure('1, 1 - 100 | 2.5, 70 - 500')->setAmount(-100));
+        $this->assertEquals(0.0, $bill, 'Overlapping ranges should ALWAYS return a bill of zero');
     }
 
 

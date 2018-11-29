@@ -8,15 +8,26 @@
 
 namespace BillingBoss\Interpreter;
 
+use BillingBoss\Expr;
 use BillingBoss\BillContext;
 use BillingBoss\AbstractBillInterpreter;
+use BillingBoss\RangeHelper;
 
 final class FlatRateBillInterpreter extends AbstractBillInterpreter
 {
+    private const EXPRESSION = Expr::POSITIVE_NUMBER .
+                               Expr::COMMA .
+                               Expr::RANGE;
 
     public function __construct()
     {
-        parent::__construct('/^\s*(-?\d*\.?\d+)\s*$/');
+        parent::__construct(sprintf('/^(%1$s)(%2$s%1$s)*$/', self::EXPRESSION, Expr::PIPE));
+    }
+
+    public function isValid(BillContext $context): bool
+    {
+        list($result, $this->ranges) = RangeHelper::validate($context->getStructure());
+        return $result === RangeHelper::VALIDATION_OK;
     }
 
     public function interpret(BillContext $context): float
@@ -24,7 +35,23 @@ final class FlatRateBillInterpreter extends AbstractBillInterpreter
         if (!$this->isValid($context)) {
             return 0;
         }
+        $bill = 0.0;
 
-        return $this->matches[0];
+        $parts = preg_split(sprintf('/%s/', Expr::PIPE), $context->getStructure());
+        // print_r($parts);
+        for ($i = 0; $i < count($parts); $i++) {
+            $range = $this->ranges[$i];
+            $matches = [];
+
+            \preg_match(sprintf('/^%s$/', self::EXPRESSION), $parts[$i], $matches);
+
+            $amount = $context->getAmount();
+            if (RangeHelper::isInRange($range, $amount)) {
+                $bill = $matches[1];
+                break;
+            }
+        }
+
+        return $bill;
     }
 }

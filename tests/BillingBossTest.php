@@ -47,7 +47,7 @@ class BillingBossTest extends TestCase
 
     public function testAnInterpreterHandlesAKnownBillingStructure()
     {
-        $context = new BillContext(100, '3');
+        $context = new BillContext(100, '3, 1 - *');
 
         $bill = BillingBoss::bill($context);
         $this->assertEquals(3, $bill);

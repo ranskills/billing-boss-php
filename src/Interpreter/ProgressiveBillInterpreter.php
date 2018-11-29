@@ -32,16 +32,17 @@ final class ProgressiveBillInterpreter extends AbstractBillInterpreter
             $matches = [];
 
             \preg_match('/^((-?\d*\.?\d+)%),\s*(\d*\.?\d+|\*)$/', $part, $matches);
+            print_r($matches);
             $amount = $matches[3];
             
             if ($amount === '*') {
                 $percentageCtxt->setAmount(floatval($billableAmount))
-                               ->setStructure($matches[1]);
+                               ->setStructure($matches[1] . ', 1 - * ');
                 $bill += $percentageBillInterpreter->interpret($percentageCtxt);
             } else {
                 $billableAmount -= $amount;
                 $percentageCtxt->setAmount($amount)
-                               ->setStructure($matches[1]);
+                               ->setStructure($matches[1] . ', 1 - * ');
                 $bill += $percentageBillInterpreter->interpret($percentageCtxt);
             }
         }

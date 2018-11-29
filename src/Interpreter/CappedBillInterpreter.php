@@ -58,7 +58,7 @@ class CappedBillInterpreter extends AbstractBillInterpreter
                 }
 
                 if ($compute) {
-                    $ctxt = new BillContext($amount, $percent . '%');
+                    $ctxt = new BillContext($amount, $percent . '%' . ', 1 - * ');
                     $bill = (new PercentageBillInterpreter())->interpret($ctxt);
 
                     if ($bill > $capMax) {
