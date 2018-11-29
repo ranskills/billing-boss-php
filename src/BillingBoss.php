@@ -4,6 +4,9 @@ namespace BillingBoss;
 
 use BillingBoss\Interpreter\FlatRateBillInterpreter;
 use BillingBoss\Interpreter\PercentageBillInterpreter;
+use BillingBoss\Interpreter\CappedBillInterpreter;
+use BillingBoss\Interpreter\ProgressiveBillInterpreter;
+use BillingBoss\Interpreter\SteppedBillInterpreter;
 
 class BillingBoss
 {
@@ -18,8 +21,11 @@ class BillingBoss
             return self::$interpreters;
         }
 
+        self::addInterpreter(new CappedBillInterpreter());
         self::addInterpreter(new FlatRateBillInterpreter());
         self::addInterpreter(new PercentageBillInterpreter());
+        self::addInterpreter(new ProgressiveBillInterpreter());
+        self::addInterpreter(new SteppedBillInterpreter());
 
         return self::$interpreters;
     }
