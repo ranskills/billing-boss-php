@@ -30,10 +30,6 @@ final class RangeHelper
             return [self::VALIDATION_CONFLICT, []];
         }
 
-        $lowerLimits = $matches[1];
-        $upperLimits = $matches[2];
-        $numRanges = count($lowerLimits);
-
         $ranges = self::getRangeLimits($str);
         if (count($ranges) === 0) {
             return [self::VALIDATION_CONFLICT, []];
