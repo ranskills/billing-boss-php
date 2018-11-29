@@ -37,7 +37,7 @@ final class SteppedBillInterpreter extends AbstractBillInterpreter
         $billPerStep = $matches[1];
         $step = $matches[2];
 
-        while($amount > 0) {
+        while ($amount > 0) {
             $bill += $billPerStep;
             $amount -= $step;
         }

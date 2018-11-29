@@ -10,7 +10,8 @@ final class ProgressiveBillInterpreter extends AbstractBillInterpreter
 
     public function __construct()
     {
-        parent::__construct('/^(-?\d*\.?\d+)%,\s*(\d*\.?\d+)(\s*>\s*(-?\d*\.?\d+)%,\s*(\d*\.?\d+))*(\s*>\s*(-?\d*\.?\d+)%,\s*(\*))$/');
+        parent::__construct('/^(-?\d*\.?\d+)%,\s*(\d*\.?\d+)' .
+        '(\s*>\s*(-?\d*\.?\d+)%,\s*(\d*\.?\d+))*(\s*>\s*(-?\d*\.?\d+)%,\s*(\*))$/');
     }
 
     public function interpret(BillContext $context): float
@@ -32,7 +33,7 @@ final class ProgressiveBillInterpreter extends AbstractBillInterpreter
             $matches = [];
 
             \preg_match('/^((-?\d*\.?\d+)%),\s*(\d*\.?\d+|\*)$/', $part, $matches);
-            print_r($matches);
+            // print_r($matches);
             $amount = $matches[3];
             
             if ($amount === '*') {
