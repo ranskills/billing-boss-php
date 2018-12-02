@@ -43,6 +43,11 @@ class BillingBoss
         }
     }
 
+    /**
+     * @param BillContext $context
+     * @return float
+     * @throws Exception\Exception
+     */
     public static function bill(BillContext $context): float
     {
         $interpreters = self::getInterpreters();

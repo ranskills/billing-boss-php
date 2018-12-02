@@ -1,7 +1,11 @@
 <?php
+
 namespace BillingBoss\Tests;
 
 use BillingBoss\RangeHelper;
+use BillingBoss\Exception\RangeException;
+use BillingBoss\Exception\RangeOverlapException;
+use BillingBoss\Exception\RangeConflictException;
 use PHPUnit\Framework\TestCase;
 
 class RangeHelperTest extends TestCase
@@ -9,45 +13,46 @@ class RangeHelperTest extends TestCase
 
     public function testNoRangeSpecified()
     {
-        $this->assertEquals([RangeHelper::VALIDATION_NO_RANGE_FOUND, []], RangeHelper::validate(''));
-        $this->assertEquals([RangeHelper::VALIDATION_NO_RANGE_FOUND, []], RangeHelper::validate('3%'));
+        $this->expectException(RangeConflictException::class);
+        RangeHelper::validate('');
+        RangeHelper::validate('3%');
     }
 
     public function testThereCanBeOnlyOneOpenEndedUpperLimit()
     {
-        $this->assertEquals([RangeHelper::VALIDATION_CONFLICT, []], RangeHelper::validate('1 - * | 1000 - *'));
+        $this->expectException(RangeConflictException::class);
+        $this->assertEquals([], RangeHelper::validate('1 - * | 1000 - *'));
     }
 
-    public function testARangeBoundaries()
+    public function testInvalidRangeBoundaries()
     {
-        $this->assertEquals([RangeHelper::VALIDATION_CONFLICT, []], RangeHelper::validate('5 - 1'));
-        $this->assertEquals([RangeHelper::VALIDATION_CONFLICT, []], RangeHelper::validate('1 - 10 | 100 - 50'));
+        $this->expectException(RangeConflictException::class);
+        $this->expectExceptionCode(RangeException::LOWER_LIMIT_GREATER_THAN_UPPER_LIMIT);
+
+        $this->assertEquals([2], RangeHelper::validate('1 - 10 | 100 - 50'));
     }
 
     public function testOverlappingRanges()
     {
+        $this->expectException(RangeOverlapException::class);
+
+        RangeHelper::validate('1 - 10 | 5 - 50');
+
+        RangeHelper::validate('1 - 10 | 11 - 20 | 15 - 30');
+    }
+
+    public function testValidRanges()
+    {
         $this->assertEquals(
-            [RangeHelper::VALIDATION_OK, [[1, 10], [11, 50]]], 
-            RangeHelper::validate('1 - 10 | 11 - 50'), 
+            [[1, 10], [11, 50]],
+            RangeHelper::validate('1 - 10 | 11 - 50'),
             'No overlapping ranges'
         );
 
         $this->assertEquals(
-            [RangeHelper::VALIDATION_OK, [[1, 10], [11, 50], [51, '*']]], 
+            [[1, 10], [11, 50], [51, '*']],
             RangeHelper::validate('1 - 10 | 11 - 50 | 51 - *'),
             'No overlapping ranges'
-        );
-
-        $this->assertEquals(
-            [RangeHelper::VALIDATION_OVERLAPPING_VALUES, []], 
-            RangeHelper::validate('1 - 10 | 5 - 50'), 
-            'Overlapping ranges'
-        );
-
-        $this->assertEquals(
-            [RangeHelper::VALIDATION_OVERLAPPING_VALUES, []], 
-            RangeHelper::validate('1 - 10 | 11 - 20 | 15 - 30'), 
-            'Overlapping ranges'
         );
     }
 
