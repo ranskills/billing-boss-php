@@ -2,6 +2,7 @@
 
 namespace BillingBoss\Interpreter;
 
+use BillingBoss\Exception\RangeException;
 use BillingBoss\Expr;
 use BillingBoss\BillContext;
 use BillingBoss\AbstractBillInterpreter;
@@ -19,12 +20,27 @@ final class PercentageBillInterpreter extends AbstractBillInterpreter
         parent::__construct(sprintf('/^(%1$s)(%2$s%1$s)*$/', self::EXPRESSION, Expr::PIPE));
     }
 
+    /**
+     * @param BillContext $context
+     * @return bool
+     * @throws RangeException
+     */
     public function isValid(BillContext $context): bool
     {
-        list($result, $this->ranges) = RangeHelper::validate($context->getStructure());
-        return $result === RangeHelper::VALIDATION_OK;
+        if (preg_match(sprintf('/%s/', Expr::RANGE), $context->getStructure()) === 0) {
+            return false;
+        }
+
+        $this->ranges = RangeHelper::validate($context->getStructure());
+
+        return count($this->ranges) > 0;
     }
 
+    /**
+     * @param BillContext $context
+     * @return float
+     * @throws RangeException
+     */
     public function interpret(BillContext $context): float
     {
         if (!$this->isValid($context)) {
@@ -44,7 +60,7 @@ final class PercentageBillInterpreter extends AbstractBillInterpreter
             $amount = $context->getAmount();
 
             if (RangeHelper::isInRange($range, $amount)) {
-                $bill = ($matches[1] * $amount)/ 100.00;
+                $bill = ($matches[1] * $amount) / 100.00;
                 break;
             }
         }

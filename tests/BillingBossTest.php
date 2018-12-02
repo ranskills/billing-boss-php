@@ -7,6 +7,7 @@ use BillingBoss\BillInterpreter;
 use BillingBoss\BillContext;
 use BillingBoss\BillingBoss;
 use BillingBoss\AbstractBillInterpreter;
+use BillingBoss\Exception\RangeOverlapException;
 use PHPUnit\Framework\TestCase;
 
 class BillingBossTest extends TestCase
@@ -32,10 +33,12 @@ class BillingBossTest extends TestCase
         
             public function interpret(BillContext $context): float
             {
-                if (!$this->isValid($context)) return 0;
+                if (!$this->isValid($context)) {
+                    return 0;
+                }
         
                 return 0;
-            } 
+            }
         };
 
         BillingBoss::addInterpreter($dummyInterpreter);
@@ -51,6 +54,17 @@ class BillingBossTest extends TestCase
 
         $bill = BillingBoss::bill($context);
         $this->assertEquals(3, $bill);
+    }
+
+
+    /**
+     * @expectedException BillingBoss\Exception\RangeOverlapException
+     */
+    public function testAnExceptionIsThrownForOverlappingRanges()
+    {
+        $context = new BillContext(100, '1, 1 - 100 | 2.5, 70 - 500');
+
+        BillingBoss::bill($context);
     }
 
     public function testBillingReturnsZeroForUnhandledBillingStructure()
