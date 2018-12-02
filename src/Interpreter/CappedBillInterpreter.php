@@ -6,7 +6,7 @@ use BillingBoss\AbstractBillInterpreter;
 use BillingBoss\BillContext;
 use BillingBoss\Expr;
 
-class CappedBillInterpreter extends AbstractBillInterpreter
+final class CappedBillInterpreter extends AbstractBillInterpreter
 {
     private const A =
         Expr::PERCENT .

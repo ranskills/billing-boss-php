@@ -8,7 +8,7 @@ use BillingBoss\Interpreter\CappedBillInterpreter;
 use BillingBoss\Interpreter\ProgressiveBillInterpreter;
 use BillingBoss\Interpreter\SteppedBillInterpreter;
 
-class BillingBoss
+final class BillingBoss
 {
     /**
      * @var BillInterpreter[]
