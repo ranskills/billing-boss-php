@@ -7,33 +7,19 @@ use BillingBoss\Expr;
 use BillingBoss\BillContext;
 use BillingBoss\AbstractBillInterpreter;
 use BillingBoss\RangeHelper;
+use BillingBoss\Traits\RangeValidityCheck;
 
 final class FlatRateBillInterpreter extends AbstractBillInterpreter
 {
+    use RangeValidityCheck;
+
     private const EXPRESSION = Expr::POSITIVE_NUMBER .
                                Expr::COMMA .
                                Expr::RANGE;
-    private $ranges = [];
 
     public function __construct()
     {
         parent::__construct(sprintf('/^(%1$s)(%2$s%1$s)*$/', self::EXPRESSION, Expr::PIPE));
-    }
-
-    /**
-     * @param BillContext $context
-     * @return bool
-     * @throws RangeException
-     */
-    public function isValid(BillContext $context): bool
-    {
-        if (preg_match(sprintf('/%s/', Expr::RANGE), $context->getStructure()) === 0) {
-            return false;
-        }
-
-        $this->ranges = RangeHelper::validate($context->getStructure());
-
-        return count($this->ranges) > 0;
     }
 
     /**
