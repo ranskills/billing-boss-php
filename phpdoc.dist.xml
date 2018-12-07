@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpdocumentor>
-    <title>Billing Bosses</title>
+    <title>Billing Boss</title>
     <parser>
         <target>build/doc</target>
         <encoding>utf8</encoding>
