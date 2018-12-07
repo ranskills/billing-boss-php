@@ -26,6 +26,7 @@
         "test": "Run all tests!",
         "clean": "Remove generated files"
     },
+    "minimum-stability": "dev",
     "require": {
         "php": "^7.1"
     },
