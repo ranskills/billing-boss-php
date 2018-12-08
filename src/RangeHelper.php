@@ -14,6 +14,15 @@ use BillingBoss\Exception\RangeException;
 use BillingBoss\Exception\RangeOverlapException;
 use BillingBoss\Exception\RangeConflictException;
 
+/**
+ * A utility class for range notation related functions
+ *
+ * @package   BillingBoss
+ * @link      https://github.com/ranskills/billing-boss-php
+ * @copyright Copyright (c) 2018 Ransford Ako Okpoti
+ * @license   Refer to the LICENSE distributed with this library
+ * @since     1.0.0
+ */
 final class RangeHelper
 {
 
@@ -22,7 +31,7 @@ final class RangeHelper
      * @return array
      * @throws RangeException
      */
-    public static function validate($str)
+    public static function validate($str): array
     {
         $matches = [];
         $numMatches = preg_match_all(sprintf('/%s/', Expr::RANGE), $str, $matches);
@@ -60,6 +69,12 @@ final class RangeHelper
         return $ranges;
     }
 
+    /**
+     * Returns a list of overlapping ranges
+     *
+     * @param array $ranges
+     * @return array A non-empty array if there are overlapping ranges, an empty array otherwise
+     */
     private static function findOverlappingRanges(array $ranges): array
     {
         $numRanges = count($ranges);
@@ -84,11 +99,13 @@ final class RangeHelper
     }
 
     /**
-     * @param $str
+     * Returns the ranges expressed in a string.
+     *
+     * @param string $str
      * @return array
      * @throws RangeConflictException
      */
-    private static function getRangeLimits($str)
+    private static function getRangeLimits($str): array
     {
         $ranges = [];
 
@@ -117,7 +134,16 @@ final class RangeHelper
         return $ranges;
     }
 
-    public static function isInRange(array $range, $value)
+    /**
+     * Checks if a given value is within a specified range
+     *
+     * @param array $range An array of two elements with the first and last elements being the lower and upper limits
+     *                     for the boundary
+     * @param              string|integer $value
+     *
+     * @return bool        true if value is within the range, false otherwise
+     */
+    public static function isInRange(array $range, $value): bool
     {
         if ($value === '*') {
             return false;

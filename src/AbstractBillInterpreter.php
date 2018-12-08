@@ -5,6 +5,15 @@ namespace BillingBoss;
 use BillingBoss\BillContext;
 use BillingBoss\BillInterpreter;
 
+/**
+ * An abstract class that implements BillInterpreter
+ *
+ * @package BillingBoss
+ * @link      https://github.com/ranskills/billing-boss-php
+ * @copyright Copyright (c) 2018 Ransford Ako Okpoti
+ * @license   Refer to the LICENSE distributed with this library
+ * @since     1.0.0
+ */
 abstract class AbstractBillInterpreter implements BillInterpreter
 {
     protected $regex;
