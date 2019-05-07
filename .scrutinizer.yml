@@ -1,0 +1,31 @@
+build:
+  nodes:
+    coverage:
+      tests:
+        override:
+          - command: composer test
+            coverage:
+              file: coverage.xml
+              format: clover
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
+checks:
+  php: true
+
+tools:
+  php_sim: true
+  php_pdepend: true
+  php_analyzer: true
+  php_cs_fixer: true
+  php_mess_detector: true
+  php_changetracking: true
+  php_code_sniffer: true
+
+filter:
+  paths:
+    - src/
+  excluded_paths:
+    - tests/

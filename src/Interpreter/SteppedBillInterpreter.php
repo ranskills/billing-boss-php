@@ -13,6 +13,15 @@ use BillingBoss\Expr;
 use BillingBoss\BillContext;
 use BillingBoss\AbstractBillInterpreter;
 
+/**
+ * Step bill interpreter.
+ *
+ * @package   BillingBoss
+ * @link      https://github.com/ranskills/billing-boss-php
+ * @copyright Copyright (c) 2018 Ransford Ako Okpoti
+ * @license   Refer to the LICENSE distributed with this library
+ * @since     1.0.0
+ */
 final class SteppedBillInterpreter extends AbstractBillInterpreter
 {
     private const EXPRESSION =  Expr::POSITIVE_NUMBER .

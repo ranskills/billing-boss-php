@@ -7,33 +7,28 @@ use BillingBoss\Expr;
 use BillingBoss\BillContext;
 use BillingBoss\AbstractBillInterpreter;
 use BillingBoss\RangeHelper;
+use BillingBoss\Traits\RangeValidityCheck;
 
+/**
+ * Percentage bill interpreter
+ *
+ * @package   BillingBoss
+ * @link      https://github.com/ranskills/billing-boss-php
+ * @copyright Copyright (c) 2018 Ransford Ako Okpoti
+ * @license   Refer to the LICENSE distributed with this library
+ * @since     1.0.0
+ */
 final class PercentageBillInterpreter extends AbstractBillInterpreter
 {
+    use RangeValidityCheck;
+
     private const EXPRESSION = Expr::PERCENT .
                                Expr::COMMA .
                                Expr::RANGE;
-    private $ranges = [];
 
     public function __construct()
     {
         parent::__construct(sprintf('/^(%1$s)(%2$s%1$s)*$/', self::EXPRESSION, Expr::PIPE));
-    }
-
-    /**
-     * @param BillContext $context
-     * @return bool
-     * @throws RangeException
-     */
-    public function isValid(BillContext $context): bool
-    {
-        if (preg_match(sprintf('/%s/', Expr::RANGE), $context->getStructure()) === 0) {
-            return false;
-        }
-
-        $this->ranges = RangeHelper::validate($context->getStructure());
-
-        return count($this->ranges) > 0;
     }
 
     /**

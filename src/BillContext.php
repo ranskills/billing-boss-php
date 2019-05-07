@@ -10,6 +10,7 @@ namespace BillingBoss;
  * @author   Ransford Okpoti <ranskills@yahoo.co.uk>
  * @license  https://opensource.org/licenses/MIT MIT
  * @link     https://github.com/ranskills/billing-boss-php
+ * @since    1.0.0
  */
 final class BillContext
 {
@@ -17,7 +18,7 @@ final class BillContext
     private $structure;
 
     /**
-     * Constructor A
+     * Constructor
      *
      * @param float  $amount    The amount to be billed
      * @param string $structure The billing structure to be applied on $amount
