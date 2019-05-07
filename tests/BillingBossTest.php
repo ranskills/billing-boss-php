@@ -57,11 +57,10 @@ class BillingBossTest extends TestCase
     }
 
 
-    /**
-     * @expectedException BillingBoss\Exception\RangeOverlapException
-     */
     public function testAnExceptionIsThrownForOverlappingRanges()
     {
+        $this->expectException(RangeOverlapException::class);
+        
         $context = new BillContext(100, '1, 1 - 100 | 2.5, 70 - 500');
 
         BillingBoss::bill($context);

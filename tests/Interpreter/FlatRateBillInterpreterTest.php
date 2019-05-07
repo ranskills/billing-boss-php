@@ -15,7 +15,7 @@ class FlatRateBillInterpreterTest extends TestCase
      */
     private $interpreter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->interpreter = new FlatRateBillInterpreter();
     }
@@ -44,12 +44,10 @@ class FlatRateBillInterpreterTest extends TestCase
         $this->assertEquals(0, $bill);
     }
 
-
-    /**
-     * @expectedException \BillingBoss\Exception\RangeOverlapException
-     */
     public function testOverlappingRangesShouldThrowAnException()
     {
+        $this->expectException(RangeOverlapException::class);
+
         $context = new BillContext(50, '1, 1 - 100 | 2.5, 70 - 500');
         $bill = $this->interpreter->interpret($context);
         $this->assertEquals(0.0, $bill, 'Overlapping ranges should ALWAYS return a bill of zero');

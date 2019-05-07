@@ -15,7 +15,7 @@ class CappedBillInterpreterTest extends TestCase
      */
     private $interpreter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->interpreter = new CappedBillInterpreter();
     }
