@@ -5,7 +5,17 @@ namespace BillingBoss\Interpreter;
 use BillingBoss\AbstractBillInterpreter;
 use BillingBoss\BillContext;
 use BillingBoss\Expr;
+use BillingBoss\RangeHelper;
 
+/**
+ * Capped bill interpreter
+ *
+ * @package   BillingBoss
+ * @link      https://github.com/ranskills/billing-boss-php
+ * @copyright Copyright (c) 2018 Ransford Ako Okpoti
+ * @license   Refer to the LICENSE distributed with this library
+ * @since     1.0.0
+ */
 final class CappedBillInterpreter extends AbstractBillInterpreter
 {
     private const A =
@@ -24,6 +34,18 @@ final class CappedBillInterpreter extends AbstractBillInterpreter
     public function __construct()
     {
         parent::__construct(sprintf('/^%1$s(%2$s%1$s)*$/', self::A, Expr::PIPE));
+    }
+
+    private function enforceBoundaries($bill, $lowerLimit, $upperLimit)
+    {
+        if ($bill > $upperLimit) {
+            $bill = $upperLimit;
+        }
+        if ($bill < $lowerLimit) {
+            $bill = $lowerLimit;
+        }
+
+        return $bill;
     }
 
     public function interpret(BillContext $context): float
@@ -48,27 +70,12 @@ final class CappedBillInterpreter extends AbstractBillInterpreter
             $rangeEnd = $matches[5];
 
             $amount = $context->getAmount();
-            if ($amount >= floatval($rangeStart)) {
-                $compute = false;
+            if (RangeHelper::isInRange([$rangeStart, $rangeEnd], $amount)) {
+                $ctxt = new BillContext($amount, $percent . '%' . ', 1 - * ');
+                $bill = (new PercentageBillInterpreter())->interpret($ctxt);
 
-                if (is_numeric($rangeEnd)) {
-                    $compute = $amount <= floatval($rangeEnd);
-                } else {
-                    $compute = true;
-                }
-
-                if ($compute) {
-                    $ctxt = new BillContext($amount, $percent . '%' . ', 1 - * ');
-                    $bill = (new PercentageBillInterpreter())->interpret($ctxt);
-
-                    if ($bill > $capMax) {
-                        $bill = $capMax;
-                    }
-                    if ($bill < $capMin) {
-                        $bill = $capMin;
-                    }
-                    break;
-                }
+                $bill = $this->enforceBoundaries($bill, $capMin, $capMax);
+                break;
             }
         }
 
