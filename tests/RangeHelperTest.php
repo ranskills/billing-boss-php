@@ -13,9 +13,18 @@ class RangeHelperTest extends TestCase
 
     public function testNoRangeSpecified()
     {
-        $this->expectException(RangeConflictException::class);
+        $this->expectException(RangeException::class);
         RangeHelper::validate('');
         RangeHelper::validate('3%');
+    }
+
+    public function testInvalidRangeSpecified()
+    {
+        $this->expectException(RangeException::class);
+        $this->expectExceptionCode(-1);
+        RangeHelper::validate('a10 - *');
+        RangeHelper::validate('10 - ');
+        RangeHelper::validate(' - *');
     }
 
     public function testThereCanBeOnlyOneOpenEndedUpperLimit()
