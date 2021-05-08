@@ -25,7 +25,7 @@ class FlatRateBillInterpreterTest extends TestCase
         $context = new BillContext(0, '5, 1 - *');
         $this->assertTrue($this->interpreter->isValid($context));
 
-        $context = new BillContext(0, '1, 1 - 499     | 10, 500 - *');
+        $context = new BillContext(0, '1, 1 - 499     | 10, 5e2 - *');
         $this->assertTrue($this->interpreter->isValid($context));
 
         $bill = $this->interpreter->interpret($context);

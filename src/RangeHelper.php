@@ -33,6 +33,24 @@ final class RangeHelper
      */
     public static function validate($str): array
     {
+        $segments = preg_split(sprintf('/%s/', Expr::PIPE), $str);
+
+        $matches = [];
+        foreach($segments as $segment) {
+            $structure = trim($segment);
+            $partOfAnotherStructure = strpos($segment, ',') !== false;
+            if ($partOfAnotherStructure) {
+                $structure = trim(explode(',', $segment)[1]);
+            }
+
+            if(preg_match(sprintf('/^%s$/', Expr::RANGE), $structure, $matches) === 0) {
+                throw new RangeException(
+                    sprintf('Invalid range specified "%s"', $structure),
+                    -1
+                );
+            }
+        }
+
         $matches = [];
         $numMatches = preg_match_all(sprintf('/%s/', Expr::RANGE), $str, $matches);
         if ($numMatches === 0) {
